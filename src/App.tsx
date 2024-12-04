@@ -1,10 +1,19 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/electron-vite.animate.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const callJava = () => {
+    console.log("Llamando a java")
+    fetch('http://localhost:8080/api/hello')
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => {
+        alert("Error al hacer la petición")
+        console.error('Error:', error)
+      })
+  }
 
   return (
     <>
@@ -18,16 +27,8 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <button onClick={callJava}>LLamar a java</button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
