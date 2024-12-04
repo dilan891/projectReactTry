@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -23,6 +24,7 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+let child: ChildProcessWithoutNullStreams;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -42,6 +44,9 @@ function createWindow() {
   } else {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+    // spawn java child process running backend jar
+    const jarPath = path.join(process.env.APP_ROOT, 'backend', 'build', 'libs', 'backend-0.0.1-SNAPSHOT.jar')
+    child = spawn('java', ['-jar', jarPath]);
   }
 }
 
@@ -49,6 +54,11 @@ function createWindow() {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  if (child) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const kill = require('tree-kill');
+        kill(child.pid);
+    }
   if (process.platform !== 'darwin') {
     app.quit()
     win = null
