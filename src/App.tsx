@@ -6,7 +6,7 @@ function App() {
 
   const callJava = () => {
     console.log("Llamando a java")
-    fetch('http://localhost:8080/api/test', {
+    fetch('http://localhost:8180/api/test', {
       method: 'GET',
     })
       .then(response => response.text())

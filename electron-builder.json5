@@ -1,12 +1,15 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "zkymed2",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "Zkymed2",
   "directories": {
     "output": "release/${version}"
   },
+  "extraFiles":[
+    "build/electron-react-java.jar"
+  ], 
   "files": [
     "dist",
     "dist-electron"
