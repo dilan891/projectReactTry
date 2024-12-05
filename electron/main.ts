@@ -45,7 +45,7 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
     // spawn java child process running backend jar
-    const jarPath = path.join(process.env.APP_ROOT, 'backend', 'build', 'libs', 'backend-0.0.1-SNAPSHOT.jar')
+    const jarPath = path.join(process.env.APP_ROOT, 'backend', 'build', 'libs', 'demo-0.0.1-SNAPSHOT.jar')
     child = spawn('java', ['-jar', jarPath]);
   }
 }
