@@ -2,7 +2,6 @@ import { app, BrowserWindow, dialog } from 'electron'
 import { fileURLToPath } from 'node:url'
 import fs from 'node:fs';
 import path from 'node:path';
-//@ts-ignore
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import kill from 'tree-kill';
 import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process'
@@ -48,12 +47,12 @@ function createWindow() {
     //devtools
     installExtension(REACT_DEVELOPER_TOOLS)
       .then((name:string) => console.log(`Added Extension:  ${name}`))
-      .catch((err:any) => console.log('An error occurred: ', err));
+      .catch((err: Error) => console.log('An error occurred: ', err));
 
     win.webContents.openDevTools()
     // spawn java child process running backend jar
     const jarPath = path.join(process.env.APP_ROOT, 'build', 'electron-react-java.jar')
-    const javaPath = path.join(process.env.APP_ROOT, 'build', 'dietjre', 'bin', 'java.exe')
+    const javaPath = path.join(process.env.APP_ROOT, 'build', 'customjreOpenJDK', 'bin', 'java.exe')
     child = spawn(javaPath, ['-jar', jarPath]);
     //console.log("child process started ", child.pid)
     //console.log("correriendo en modo dev")
@@ -62,7 +61,7 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
     // spawn java child process running backend jar
     const jarPath = path.join(app.getAppPath(),  '..', '..','build', 'electron-react-java.jar')
-    const javaPath = path.join(process.env.APP_ROOT,'..','..', 'build', 'dietjre', 'bin', 'java.exe')
+    const javaPath = path.join(process.env.APP_ROOT,'..','..', 'build', 'customjreOpenJDK', 'bin', 'java.exe')
     if(!fs.existsSync(jarPath)){
       //elmina las ruta antes de la carpeta de la app
       //pica la ruta a partir de a la mitad
@@ -72,7 +71,16 @@ function createWindow() {
       dialog.showErrorBox("Error", "No se encontro el archivo " + secondhalf)
       return
     }
-    child = spawn('java', ['-jar', jarPath]);
+    if(!fs.existsSync(javaPath)){
+      //elmina las ruta antes de la carpeta de la app
+      //pica la ruta a partir de a la mitad
+      const splitroot = app.getPath("exe").split(path.sep).slice(0, -2).join(path.sep)
+      const secondhalf = javaPath.split(splitroot)[1]
+      //dialog.showErrorBox("Error", "No se encontro el archivo " + splitroot)
+      dialog.showErrorBox("Error", "No se encontro el archivo " + secondhalf)
+      return
+    }
+    child = spawn(javaPath, ['-jar', jarPath]);
   }
 
 }

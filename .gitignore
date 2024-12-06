@@ -25,4 +25,6 @@ dist-ssr
 
 jdk-21
 dietjre
+jdk_bin.exe
+customjreOpenJDK
 release

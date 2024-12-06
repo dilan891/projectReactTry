@@ -8,7 +8,8 @@
     "output": "release/${version}"
   },
   "extraFiles":[
-    "build/electron-react-java.jar"
+    "build/electron-react-java.jar",
+    "build/customjreOpenjdk"
   ], 
   "files": [
     "dist",
